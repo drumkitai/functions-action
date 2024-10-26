@@ -45,7 +45,10 @@ export class FuncIgnore {
         });
         allFiles.forEach((name) => {
             const filename = path.relative(working_dir, name);
-            if (ignoreParser.ignores(filename)) {
+            if (
+                ignoreParser.ignores(filename) &&
+                !this.shouldIgnore(filename)
+            ) {
                 try {
                     Logger.Info(`Removing ${filename}.`);
                     rimraf.sync(name);
@@ -56,6 +59,16 @@ export class FuncIgnore {
                 }
             }
         });
+    }
+
+    private static shouldIgnore(filename: string): boolean {
+        // This is where our http trigger lives.
+        const pathsToIgnore = ["v1", "function.json"];
+        return pathsToIgnore.some(
+            (ignorePath) =>
+                filename === ignorePath ||
+                filename.startsWith(`${ignorePath}/`),
+        );
     }
 
     private static sanitizeWorkingDir(working_dir: string): string {
