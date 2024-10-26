@@ -47,7 +47,7 @@ export class FuncIgnore {
             const filename = path.relative(working_dir, name);
             if (ignoreParser.ignores(filename)) {
                 try {
-                    Logger.Info("Removing ${filename}.");
+                    Logger.Info(`Removing ${filename}.`);
                     rimraf.sync(name);
                 } catch (error) {
                     Logger.Warn(
